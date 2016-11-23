@@ -45,7 +45,7 @@ class RangeFinder:
 		distance = round(distance, 2)  # distance is in cm
 
 		distance_m = pulse_duration * 171.50  # 171.50 = (343 m/s) / 2
-		distance_m = round(distance, 2)  # distance is in meters
+		# distance_m = round(distance, 2)  # distance is in meters
 
 		print "Raw travel time: ",pulse_duration,"s"
 		print "Distance (meters):",distance_m,"meters"
