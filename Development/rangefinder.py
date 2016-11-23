@@ -1,9 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-# GPIO.setmode(GPIO.BCM)
 
-# TRIG = 23 
-# ECHO = 24
 
 
 class RangeFinder:
@@ -67,7 +64,12 @@ class RangeFinder:
 
 		print "Distance (cm):",distance,"cm\n"
 
-		return distance
+
+		# thresholds for accurate measurements
+		if 0 < distance < 400:
+			return distance
+		else:
+			return 0.0
 
 
 	def wait(self):
