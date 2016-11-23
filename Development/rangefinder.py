@@ -65,10 +65,10 @@ class RangeFinder:
 
 		distance_m = distance / 100  # 171.50 = (343 m/s) / 2
 
-		print "Raw travel time: ",pulse_duration,"s"
-		print "Distance (meters):",distance_m,"meters"
+		# print "Raw travel time: ",pulse_duration,"s"
+		# print "Distance (meters):",distance_m,"meters"
 
-		print "Distance (cm):",distance,"cm\n"
+		# print "Distance (cm):",distance,"cm\n"
 
 		return distance
 
