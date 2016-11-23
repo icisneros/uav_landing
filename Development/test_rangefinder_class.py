@@ -14,9 +14,9 @@ def mean_distance():
 			suff_nonzero += 1
 
 	if suff_nonzero >= 3:
-		return 0.0
-	else:
 		return reduce(lambda x, y: x + y, distances) / len(distances)
+	else:
+		return 0.0
 
 
 
