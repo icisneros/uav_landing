@@ -4,17 +4,17 @@ from rangefinder import RangeFinder
 def mean_distance():
 	distances = []
 
-	for i in range(0,5):	
+	for i in range(0,3):	
 		distances.append(rf.distance_read())
 		rf.wait()
 
 	suff_nonzero = 0
-	for i in range(0,5):
+	for i in range(0,3):
 		if distances[1] != 0:
 			suff_nonzero += 1
 
-	if suff_nonzero >= 3:
-		return reduce(lambda x, y: x + y, distances) / len(distances)
+	if suff_nonzero >= 2:
+		return reduce(lambda x, y: x + y, distances) / suff_nonzero
 	else:
 		return 0.0
 
