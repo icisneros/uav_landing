@@ -57,6 +57,12 @@ class RangeFinder:
 		distance = (pulse_duration * 17150) - self.calib_dist  # 17150 = (34300 cm/s) / 2
 		distance = round(distance, 2)  # distance is in cm
 
+		# thresholds for accurate measurements
+		if 0 < distance < 400:
+			distance = distance
+		else:
+			distance = 0.0
+
 		distance_m = distance / 100  # 171.50 = (343 m/s) / 2
 
 		print "Raw travel time: ",pulse_duration,"s"
@@ -64,12 +70,7 @@ class RangeFinder:
 
 		print "Distance (cm):",distance,"cm\n"
 
-
-		# thresholds for accurate measurements
-		if 0 < distance < 400:
-			return distance
-		else:
-			return 0.0
+		return distance
 
 
 	def wait(self):
