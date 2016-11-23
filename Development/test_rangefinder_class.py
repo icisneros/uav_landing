@@ -7,6 +7,10 @@ if __name__ == '__main__':
 	rf.initialize()
 
 
+	print "Calibrating..."
+	rf.calibration()
+
+
 	try:
 		# For continuous reading
 		while True:
