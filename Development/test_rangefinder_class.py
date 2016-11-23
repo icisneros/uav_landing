@@ -2,7 +2,7 @@ from rangefinder import Rangefinder
 
 
 if __name__ == '__main__':
-	rf = Rangefinder()
+	rf = RangeFinder()
 
 	rf.initialize()
 
