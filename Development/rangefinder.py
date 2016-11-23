@@ -78,7 +78,7 @@ class RangeFinder:
 		   Introduces a 1 second delay.
 		"""
 		GPIO.output(self.TRIG, False)
-		time.sleep(0.5)
+		time.sleep(0.2)
 
 	def finish(self):
 		"""Called when done using the ultrasonic sensor.
