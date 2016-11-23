@@ -1,4 +1,4 @@
-from rangefinder import Rangefinder
+from rangefinder import RangeFinder
 
 
 if __name__ == '__main__':
