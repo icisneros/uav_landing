@@ -57,7 +57,7 @@ class RangeFinder:
 		time.sleep(1)
 
 	def finish(self):
-		print "Measurement stopped"
 		GPIO.cleanup()
+		print "Measurement stopped"
 
 
