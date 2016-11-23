@@ -6,13 +6,14 @@ if __name__ == '__main__':
 
 	rf.initialize()
 
-	# For continuous reading
-	while True:
-		rf.initialize()
-		rf.distance_read()
 
-	# For a single shot read
-	# rf.distance_read()
+	try:
+		# For continuous reading
+		while True:
+			rf.distance_read()
+			rf.wait()
 
-
-	rf.finish()
+		# For a single shot read
+		# rf.distance_read()
+	except KeyboardInterrupt:
+		rf.finish()

@@ -53,7 +53,11 @@ class RangeFinder:
 		print "Distance (cm):",distance,"cm\n"
 
 
+	def wait(self):
+		time.sleep(1)
+
 	def finish(self):
+		print "Measurement stopped"
 		GPIO.cleanup()
 
 
