@@ -8,6 +8,7 @@ if __name__ == '__main__':
 
 	# For continuous reading
 	while True:
+		rf.initialize()
 		rf.distance_read()
 
 	# For a single shot read
