@@ -1,0 +1,8 @@
+** Calibrating Monocular Camera **
+http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration
+
+# first run:
+rosrun usb_cam usb_cam_node
+
+!! Important !!  Need to change square size to be accurate to my printout (108mm -> 025 mm)
+rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/usb_cam/image_raw camera:=/usb_cam
