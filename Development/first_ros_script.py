@@ -368,6 +368,9 @@ class ARTag():
             else:
                 rospy.loginfo("NOT oriented properly")
 
+            rospy.loginfo("single_estimate = ")
+            rospy.loginfo(single_estimate)
+
 
         self.r.sleep()
 
