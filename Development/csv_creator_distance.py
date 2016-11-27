@@ -397,14 +397,6 @@ class ARTag():
     #     self.r.sleep()
 
 
-    def csv_writing(self):
-
-
-
-
-
-
-
 
 
 
