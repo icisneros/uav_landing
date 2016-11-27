@@ -35,6 +35,7 @@ from cv_bridge import CvBridge, CvBridgeError
 # ROS
 import rospy
 from ar_track_alvar_msgs.msg import *
+import tf
 
 # Peripheral libraries
 # import numpy as np 
@@ -141,6 +142,12 @@ class ARTag():
         qt_w = artag.pose.pose.orientation.w
 
 
+
+        quaternion = (qt_x, qt_y, qt_z, qt_w)
+        euler = tf.transformations.euler_from_quaternion(quaternion)
+        roll = euler[0]
+        pitch = euler[1]
+        yaw = euler[2]
 
         # tag_yaw = 
         # tag_pitch
