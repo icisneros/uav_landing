@@ -72,6 +72,9 @@ Tags_Dict = {}
 # tag_roll:   Tags_Dict[tag_id][5]
 
 
+
+
+
 TAG0 = 0
 TAG1 = 1
 TAG2 = 2
@@ -82,6 +85,20 @@ TAG6 = 6
 TAG7 = 7
 TAG8 = 8
 TAG9 = 9
+
+
+
+# For testing 
+ITERATIONS = 0
+NUMBER_DETECTED = 0
+MAX_ITERS = 10
+Last_Known_var
+
+TAGX = 0
+TAGZ = 2
+TAGYAW = 3
+TAGPITCH = 4
+TAGROLL = 5
 
 
 
@@ -355,34 +372,52 @@ class ARTag():
         return {'center': m_measurements}
 
 
-    def fsm(self):
-        # rospy.loginfo("Running fsm function\n")
+    # def fsm(self):
+    #     # rospy.loginfo("Running fsm function\n")
 
-        if Tag_Detected:
+    #     if Tag_Detected:
 
-            single_estimate = copy.deepcopy(Tags_Dict)
+    #         single_estimate = copy.deepcopy(Tags_Dict)
 
-            if Multiple_Tags:
-                # If multiple tags are detected, get the means
-                single_estimate = self.mean_measurements()
-                # other wise, single_estimate dict has only one key value pair
+    #         if Multiple_Tags:
+    #             # If multiple tags are detected, get the means
+    #             single_estimate = self.mean_measurements()
+    #             # other wise, single_estimate dict has only one key value pair
 
-            # Check if orientation is proper
-            if self.oriented_properly(single_estimate):
-                rospy.loginfo("Oriented properly!")
-            else:
-                rospy.loginfo("NOT oriented properly")
+    #         # Check if orientation is proper
+    #         if self.oriented_properly(single_estimate):
+    #             rospy.loginfo("Oriented properly!")
+    #         else:
+    #             rospy.loginfo("NOT oriented properly")
 
-            rospy.loginfo("single_estimate = ")
-            rospy.loginfo(single_estimate)
+    #         rospy.loginfo("single_estimate = ")
+    #         rospy.loginfo(single_estimate)
 
 
-        self.r.sleep()
+    #     self.r.sleep()
+
+
+    def csv_writing(self):
+
+
+
+
+
+
+
 
 
 
     def __init__(self):
         global STATE
+
+        # Testing
+        global ITERATIONS
+        global NUMBER_DETECTED
+        global Last_Known_var
+
+
+
         rospy.init_node('artag_node', anonymous=False)
         # ctrl + c -> call self.shutdown function
         rospy.on_shutdown(self.shutdown)
@@ -408,11 +443,42 @@ class ARTag():
 
 
         rospy.loginfo("Finished init...\n")
-        while not rospy.is_shutdown():
-            self.fsm()
+
+        with open('test.csv', 'wb') as csvfile:
+
+            spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            
+            rospy.loginfo("Begin writing to csv file...\n")
+
+            if Tag_Detected:  # we care about starting only when ready (aka tag has been detected at least once)
+               
+                while not rospy.is_shutdown():
+                    
+                    # Testing, CSV stuff:
+                    ITERATIONS += 1
+
+                    # make sure we only iterate NUMBER_DETECTED if tag 0 is detected
+                    if Tag_Detected and Tags_Dict.keys()[0] = TAG0:
+                        NUMBER_DETECTED += 1
+                        
+                        Last_Known_var = round(Tags_Dict[0][TAGX],2)   # ********************************************************************************
+
+                    # at MAX_ITERS number of iterations, calculate the detection percentage vs the independent variable
+                    if ITERATIONS == MAX_ITERS:
+                        accuracy = (NUMBER_DETECTED / ITERATIONS) * 100  # given as a percentage
+                        independent_var = Last_Known_var
+
+                        rospy.loginfo("Writing to CSV file...\n")
+                        spamwriter.writerow(accuracy, independent_var)
+                    
+                    self.r.sleep()
+
+
 
 
     def shutdown(self):
+
+
         cv2.destroyAllWindows()
         # stop robot
         rospy.loginfo("Stopping Script")
