@@ -43,43 +43,24 @@ from math import radians
 
 
 
-# # Speeds
-# LIN_SPEED = 0.15  # might need to up this from 0.5
-# SLOW_ROT_SPEED = radians(25)
-# ROT_SPEED = radians(60) # slight turns
-# ROT90 = radians(90)  # 90 degree turns
 
 
-# # AR Tag stuff
+# AR Tag stuff
 Tag_Detected = False
-Tags_Detected_List = None
+Tags_Detected_List = []
 Tags_Buffer = [None, None, None, None, None, None]
-TAGS_BUFFER_SIZE = 6
+TAGS_BUFFER_SIZE = 6  # !!! The amount of frames that are buffered
+Last_Seen_Tag = None
 
-# Last_Seen_Tag = None
+POS_TAG_IDEN = 0  # !!! The amount of positive identifications needed to flag Tag_Detected to True
+                  # The higher the int, the more frames need to positively identify a tag (strictness is increased).
 
-# # Decided at beginning
-# BarTagID = 0
-
-# # EXPERIMENTALLY DETERMINED
-# RIGHT_THRESH = 0.13
-# LEFT_THRESH = -0.13
-# DISTANCE_THRESH = 0.13
-# BAR_RIGHT_THRESH = 0.10
-# BAR_LEFT_THRESH = -0.10
-# BAR_DISTANCE_THRESH = 0.15
-# TIGHT_R_THRESH = 0.03
-# TIGHT_L_THRESH = -0.03
-
-
-# # FSM states
-# START = 0
-# APR_BAR = 1
-# NEXT = 2
 
 
 
 class ARTag():
+
+    # ******************************************* PROCESSING ENVIRONMENT *******************************************
 
 
     # def processWebcam(self, data):
@@ -112,17 +93,21 @@ class ARTag():
         rospy.loginfo(Tag_Detected)
 
 
+
+    # ************************************ AR TAG FUNCTIONS ************************************
+    
+
     def arBufferer(self, tags):
         """Returns True and a tag list if at least one tag is identified
            within a series of size TAGS_BUFFER SIZE
         """
         global Tags_Buffer
 
+        sizeOf = 0
 
         if tags is not None:
             sizeOf = len(tags)
-        else:
-            sizeOf = 0
+
         if sizeOf > 0:
             Tags_Buffer.append(tags)
         else:
@@ -132,6 +117,7 @@ class ARTag():
 
         buffered_tag_list = None
         emptyFrames = 0
+
         for i in range(0, TAGS_BUFFER_SIZE):
             if Tags_Buffer[i] is None:
                 emptyFrames += 1
@@ -141,7 +127,7 @@ class ARTag():
         # If a tag is seen at least once, set to true
         # We get more false negatives than false positives, so this is the way we can 
         # deal with it.
-        if TAGS_BUFFER_SIZE - emptyFrames > 0:
+        if TAGS_BUFFER_SIZE - emptyFrames > POS_TAG_IDEN:
             tagDetected = True
         else:
             tagDetected = False
@@ -149,133 +135,41 @@ class ARTag():
         return tagDetected, buffered_tag_list
 
 
-    # def returnIDandCoord(self,listItem):
-    #     """Returns a tuple
-    #        in the form (tagID_1, (x_1,y_1,z_1))
-    #     """
-    #     tagID = listItem.id
-    #     x = listItem.pose.pose.position.x
-    #     y = listItem.pose.pose.position.y
-    #     z = listItem.pose.pose.position.z
-    #     return (tagID, (x,y,z))
+    def returnIDandCoord(self,listItem):
+        """Returns a tuple
+           in the form (tagID_1, (x_1,y_1,z_1))
+        """
+        tagID = listItem.id
+        x = listItem.pose.pose.position.x
+        y = listItem.pose.pose.position.y
+        z = listItem.pose.pose.position.z
+        return (tagID, (x,y,z))
 
 
-    # def convertTagPosition(self, tagList):
-    #     """Returns a list
-    #        in the form [(tagID_1, (x_1,y_1,z_1)), (tagID_2, (x_2,y_2,z_2)), ...]
-    #     """
-    #     newList = []
-    #     if tagList is not None:
-    #         sizeOf = len(tagList)
-    #     else:
-    #         sizeOf = 0
-    #     if sizeOf > 0:  # ideally this case is checked before the function is called...
-    #         for i in range(0, sizeOf):
-    #             useful = self.returnIDandCoord(tagList[i])
-    #             newList.append(useful)
-    #     else:
-    #         return None
+    def convertTagPosition(self, tagList):
+        """Returns a list
+           in the form [(tagID_1, (x_1,y_1,z_1)), (tagID_2, (x_2,y_2,z_2)), ...]
+        """
+        newList = []
+        if tagList is not None:
+            sizeOf = len(tagList)
+        else:
+            sizeOf = 0
+        if sizeOf > 0:  # ideally this case is checked before the function is called...
+            for i in range(0, sizeOf):
+                useful = self.returnIDandCoord(tagList[i])
+                newList.append(useful)
+        else:
+            return None
 
-    #     return newList, sizeOf
-
-
-
-    # def approachATag(self, tag):
-    #     """
-    #         STATE -> same
-    #               or 
-    #               -> NEXT
+        return newList, sizeOf
 
 
-    #     Takes a tag coordinates and centers the camera on it.
-    #        Moves towards it until the z coordinate (depth) is 
-    #        below a certain threshold.
-    #     """
-    #     global STATE
-        
-    #     move_recommend = Twist()
-        
-    #     if Tag_Detected:
-    #         self.lastSeenTagUpdate(tag)
+    def lastSeenTagUpdate(self, tag):
+        global Last_Seen_Tag
+        if tag is not None:
+            Last_Seen_Tag = tag
 
-    #         (tagID, (x_coord, y_coord, z_coord)) = tag
-
-    #         if tagID == BarTagID:  # different thresh for the Bar tag
-    #             right_thresh = BAR_RIGHT_THRESH
-    #             left_thresh = BAR_LEFT_THRESH
-    #             dist_thresh = BAR_DISTANCE_THRESH
-    #         else:
-    #             right_thresh = RIGHT_THRESH
-    #             left_thresh = LEFT_THRESH
-    #             dist_thresh = DISTANCE_THRESH
-
-    #         # Center the tag
-    #         if x_coord > right_thresh:
-    #             move_recommend.angular.z = -ROT_SPEED  # turn left
-    #         elif x_coord < left_thresh:
-    #             move_recommend.angular.z = ROT_SPEED  # turn right
-    #         else:
-    #             move_recommend.angular.z = 0
-
-    #         # Move towards tag; check for distance
-    #         if z_coord > dist_thresh:
-    #             move_recommend.linear.x = LIN_SPEED
-    #         else:
-    #             move_recommend.linear.x = 0
-    #             # Center the tag once up close
-    #             if x_coord > TIGHT_R_THRESH:
-    #                 move_recommend.angular.z = -ROT_SPEED  # turn left
-    #             elif x_coord < TIGHT_L_THRESH:
-    #                 move_recommend.angular.z = ROT_SPEED  # turn right
-    #             else:
-    #                 move_recommend.angular.z = 0
-    #                 # STATE = NEXT
-    #     else:
-    #         move_recommend.linear.x = 0
-    #         move_recommend.angular.z = 0
-
-    #     return move_recommend
-
-
-
-    # def lookForBarAtStart(self):
-    #     """ 
-    #         STATE -> same
-    #               or
-    #               -> APR_BAR
-
-
-    #         Will spin until it spots the Bar AR tag.
-    #     """
-    #     global STATE
-
-    #     #tagsList = list(Tags_Detected_List)
-
-    #     move_obj = Twist()
-    #     move_obj.linear.x = 0
-    #     move_obj.angular.z = SLOW_ROT_SPEED
-        
-    #     if Tag_Detected:
-    #         rospy.loginfo("Iterating through tags")
-    #         tags, sizeOf = self.convertTagPosition(Tags_Detected_List)
-    #         if sizeOf > 0:
-    #             for i in range(0, sizeOf):
-    #                 tagID, tag_coords = tags[i]
-
-    #                 if tagID == BarTagID:  # found Bar tag; stop rotating
-    #                     STATE = APR_BAR     # Change the STATE
-    #                     move_obj.angular.z = 0
-    #                     break
-
-    #             return move_obj
-    #         else:
-    #             # Odd case where Tag_Detected is true but that data list is empty
-    #             rospy.loginfo("Error, AR tags list is empty")
-    #             return move_obj
-    #     else:
-    #         # defaults to same STATE
-    #         # default move is to rotate ad infinitum
-    #         return move_obj
 
 
     # def lastSeenTagUpdate(self, tag):
@@ -350,6 +244,7 @@ class ARTag():
     #     self.r.sleep()
     #     # pass
 
+
     def fsm(self):
         rospy.loginfo("Running fsm function\n")
         self.r.sleep()
@@ -380,13 +275,6 @@ class ARTag():
         # Publish to velocity smoother publisher 
         # self.wheels = rospy.Publisher('velocity_smoother/raw_cmd_vel', Twist, queue_size=10)
 
-        # Necessary so that bot can take an action without moving
-        # move_obj = Twist()
-        # move_obj.linear.x = 0
-        # move_obj.angular.z = 0
-
-        # # Initial FMS State
-        # STATE = START
 
 
         rospy.loginfo("Finished init...")
