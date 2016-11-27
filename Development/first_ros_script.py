@@ -53,8 +53,8 @@ from math import radians
 # # AR Tag stuff
 Tag_Detected = False
 Tags_Detected_List = None
-# Tags_Buffer = [None, None, None, None, None, None]
-# TAGS_BUFFER_SIZE = 6
+Tags_Buffer = [None, None, None, None, None, None]
+TAGS_BUFFER_SIZE = 6
 
 # Last_Seen_Tag = None
 
