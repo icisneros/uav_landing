@@ -120,7 +120,7 @@ class ARTag():
                 tag_angles = self.quaternion_to_euler(data.markers[tag])
 
                 # populate the global dict
-                Tags_Dict[tag_id] = [tag_x, tag_y, tag_z]
+                Tags_Dict[tag_id] = [tag_x, tag_y, tag_z] + tag_angles
 
             rospy.loginfo("tags_dict = ")
             rospy.loginfo(Tags_Dict)
@@ -142,20 +142,14 @@ class ARTag():
         qt_w = artag.pose.pose.orientation.w
 
 
-
         quaternion = (qt_x, qt_y, qt_z, qt_w)
         euler = tf.transformations.euler_from_quaternion(quaternion)
-        roll = euler[0]
-        pitch = euler[1]
-        yaw = euler[2]
+        tag_roll = euler[0]
+        tag_pitch = euler[1]
+        tag_yaw = euler[2]
 
-        # tag_yaw = 
-        # tag_pitch
-        # tag_roll
-
-
-        # return [tag_yaw, tag_pitch, tag_roll]
-        return 0.0
+        return [tag_yaw, tag_pitch, tag_roll]
+        # return 0.0
         # pass
     
 
