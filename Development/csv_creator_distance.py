@@ -92,7 +92,7 @@ TAG9 = 9
 ITERATIONS = 0
 NUMBER_DETECTED = 0
 MAX_ITERS = 10
-Last_Known_var
+Last_Known_var = 0.0
 
 TAGX = 0
 TAGZ = 2
