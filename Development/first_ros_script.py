@@ -80,17 +80,20 @@ class ARTag():
         global Tags_Detected_List
         # rospy.loginfo("data: ")
 
-        buffered_bool, buffered_list = self.arBufferer(data.markers)
-        # data.markers
-        if buffered_bool: # triggers cond. if enough frames of tag have been seen
-            Tag_Detected = True
-            Tags_Detected_List = buffered_list
-        else:
-            Tag_Detected = False
-            Tags_Detected_List = None
+        # buffered_bool, buffered_list = self.arBufferer(data.markers)
+        # # data.markers
+        # if buffered_bool: # triggers cond. if enough frames of tag have been seen
+        #     Tag_Detected = True
+        #     Tags_Detected_List = buffered_list
+        # else:
+        #     Tag_Detected = False
+        #     Tags_Detected_List = None
 
-        rospy.loginfo("Tag_Detected")
-        rospy.loginfo(Tag_Detected)
+        # rospy.loginfo("Tag_Detected")
+        # rospy.loginfo(Tag_Detected)
+
+        rospy.loginfo("data = ")
+        # rospy.loginfo(data.markers[0])
 
 
 
