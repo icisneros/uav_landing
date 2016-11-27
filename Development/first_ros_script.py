@@ -55,6 +55,8 @@ Last_Seen_Tag = None
 POS_TAG_IDEN = 0  # !!! The amount of positive identifications needed to flag Tag_Detected to True
                   # The higher the int, the more frames need to positively identify a tag (strictness is increased).
 
+Tags_Dict = {}
+
 
 
 
@@ -78,6 +80,7 @@ class ARTag():
         """
         global Tag_Detected
         global Tags_Detected_List
+        global Tags_Dict
         # rospy.loginfo("data: ")
 
         # buffered_bool, buffered_list = self.arBufferer(data.markers)
@@ -97,11 +100,23 @@ class ARTag():
             # rospy.loginfo(len(data.markers))
             for tag in range(len(data.markers)):
                 tag_id = data.markers[tag].id
-                rospy.loginfo("tag id =  %s", str(tag_id))
+                tag_x = -data.markers[tag].pose.pose.position.x
+                tag_y = -data.markers[tag].pose.pose.position.y
+                tag_z = data.markers[tag].pose.pose.position.z
+                # rospy.loginfo("tag id =  %s", str(tag_id))
+                Tags_Dict[tag_id] = [tag_x, tag_y, tag_z]
+
+            rospy.loginfo("tags_dict = ")
+            rospy.loginfo(Tags_Dict)
 
 
 
     # ************************************ AR TAG FUNCTIONS ************************************
+
+
+
+    def quaternion_to_euler(self):
+        pass
     
 
     def arBufferer(self, tags):
@@ -253,7 +268,7 @@ class ARTag():
 
 
     def fsm(self):
-        rospy.loginfo("Running fsm function\n")
+        # rospy.loginfo("Running fsm function\n")
         self.r.sleep()
 
 
