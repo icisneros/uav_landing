@@ -55,7 +55,16 @@ Last_Seen_Tag = None
 POS_TAG_IDEN = 0  # !!! The amount of positive identifications needed to flag Tag_Detected to True
                   # The higher the int, the more frames need to positively identify a tag (strictness is increased).
 
-Tags_Dict = {}
+# format: {tag_id: [tag_x, tag_y, tag_z, tag_yaw, tag_pitch, tag_roll]}
+Tags_Dict = {}  
+# accessing:
+# tag_x:      Tags_Dict[tag_id][0]
+# tag_y:      Tags_Dict[tag_id][1]
+# tag_z:      Tags_Dict[tag_id][2]
+# tag_yaw:    Tags_Dict[tag_id][3]
+# tag_pitch:  Tags_Dict[tag_id][4]
+# tag_roll:   Tags_Dict[tag_id][5]
+
 
 
 
@@ -96,19 +105,26 @@ class ARTag():
         # rospy.loginfo(Tag_Detected)
 
         if data.markers:  # make sure data is not empty
-            # rospy.loginfo("data length = ")
-            # rospy.loginfo(len(data.markers))
+
             for tag in range(len(data.markers)):
+
                 tag_id = data.markers[tag].id
-                tag_x = data.markers[tag].pose.pose.position.x
-                tag_y = -data.markers[tag].pose.pose.position.y
-                tag_z = data.markers[tag].pose.pose.position.z
-                # rospy.loginfo("tag id =  %s", str(tag_id))
+
+                # position (in meters) rounded to the nearest cm
+                tag_x = round(data.markers[tag].pose.pose.position.x, 2)
+                tag_y = round(-data.markers[tag].pose.pose.position.y, 2)  # inverted in the camera's reference
+                tag_z = round(data.markers[tag].pose.pose.position.z, 2)
+
+                # pose
+                # tag_angles = quaternion_to_euler(data.markers[tag])
+
+                # populate the global dict
                 Tags_Dict[tag_id] = [tag_x, tag_y, tag_z]
 
             rospy.loginfo("tags_dict = ")
             rospy.loginfo(Tags_Dict)
         else:
+            # remember to empty the dict every loop
             Tags_Dict = {}
 
 
