@@ -93,7 +93,7 @@ class ARTag():
         # rospy.loginfo(Tag_Detected)
 
         rospy.loginfo("data = ")
-        # rospy.loginfo(data.markers[0])
+        rospy.loginfo(data.markers[0])
 
 
 
@@ -263,7 +263,7 @@ class ARTag():
         rospy.loginfo("Initializing...")
 
         # offers a convenient way for looping at the desired rate. Default is 10hz
-        self.r = rospy.Rate(30);
+        self.r = rospy.Rate(10);
 
         self.bridge = CvBridge()
 
