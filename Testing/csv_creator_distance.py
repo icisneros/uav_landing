@@ -91,14 +91,20 @@ TAG9 = 9
 # For testing 
 ITERATIONS = 0
 NUMBER_DETECTED = 0
-MAX_ITERS = 10
 Last_Known_var = 0.0
+DATA_POINT = 0
 
 TAGX = 0
 TAGZ = 2
 TAGYAW = 3
 TAGPITCH = 4
 TAGROLL = 5
+
+
+# Testing Control
+CSV_NAME = 'test.csv'
+MAX_ITERS = 10
+
 
 
 
@@ -406,7 +412,7 @@ class ARTag():
         # Testing
         global ITERATIONS
         global NUMBER_DETECTED
-        global Last_Known_var
+        global Last_Known_vars
 
 
 
@@ -436,9 +442,9 @@ class ARTag():
 
         rospy.loginfo("Finished init...\n")
 
-        with open('test.csv', 'wb') as csvfile:
+        with open(CSV_NAME, 'wb') as csvfile:
 
-            fieldnames = ['accuracy (percentage)', 'independent_var']
+            fieldnames = ['data point, accuracy (percentage)', 'tag_x', 'tag_y', 'tag_z', 'tag_yaw', 'tag_pitch', 'tag_roll']
 
             spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL, fieldnames=fieldnames)
             
@@ -460,16 +466,21 @@ class ARTag():
                 if Tag_Detected and (Tags_Dict.keys()[0] == TAG0):
                     NUMBER_DETECTED += 1
                     
-                    Last_Known_var = round(Tags_Dict[0][TAGX],2)   # ********************************************************************************
+
+                    Last_Known_vars = [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
+                    Last_Known_vars = [ round(elem, 2) for elem in Last_Known_vars ]
 
                 # at MAX_ITERS number of iterations, calculate the detection percentage vs the independent variable
                 if ITERATIONS == MAX_ITERS:
                     accuracy = (NUMBER_DETECTED / ITERATIONS) * 100  # given as a percentage
-                    independent_var = Last_Known_var
+                    # independent_var = Last_Known_vars
 
                     rospy.loginfo("Writing to CSV file...\n")
-                    spamwriter.writerow([accuracy, independent_var])
+                    spamwriter.writerow([DATA_POINT, accuracy] + Last_Known_vars)
+
+                    DATA_POINT += 1
                 
+
                 self.r.sleep()
 
 
