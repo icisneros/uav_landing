@@ -108,6 +108,8 @@ class ARTag():
 
             rospy.loginfo("tags_dict = ")
             rospy.loginfo(Tags_Dict)
+        else:
+            Tags_Dict = {}
 
 
 
