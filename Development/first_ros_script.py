@@ -1,8 +1,20 @@
+#!/usr/bin/env python
+
+
 """
+-----------------------------------------------------------------------------------------
 AR Tag Experimentations
 
--- Launch file package: --
-ar_track_alvar package for launch file
+-- Launch files: --
+usb_cam usb_cam.launch
+* or *
+usb_cam usb_cam_wyaml.launch
+
+** and **
+
+webcam_ar_track webcam_indiv.launch
+* or *
+webcam_ar_track webcam_bundle.launch
 
 -- For /ar_pose_marker msg objects: --
 from ar_track_alvar_msgs.msg import AlvarMarkers
@@ -11,9 +23,11 @@ from ar_track_alvar_msgs.msg import AlvarMarkers
 roslaunch usb_cam usb_cam.launch
 roslaunch webcam_ar_track webcam_indiv.launch
  * or * 
-roslaunch webcam_ar_track webcam_bundle.launch
+roslaunch ./all.launch.xml
 
+-----------------------------------------------------------------------------------------
 """
+
 # OpenCV
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
@@ -338,17 +352,19 @@ class ARTag():
 
     def fsm(self):
         rospy.loginfo("Running fsm function\n")
+        self.r.sleep()
 
 
 
     def __init__(self):
         global STATE
-        rospy.init_node('ARTag', anonymous=False)
+        rospy.init_node('artag_node', anonymous=False)
         # ctrl + c -> call self.shutdown function
         rospy.on_shutdown(self.shutdown)
         # print msg 
         rospy.loginfo("Initializing...")
-        # How often should provide commands? 10 HZ
+
+        # offers a convenient way for looping at the desired rate. Default is 10hz
         self.r = rospy.Rate(10);
 
         self.bridge = CvBridge()
