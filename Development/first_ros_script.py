@@ -100,7 +100,7 @@ class ARTag():
             # rospy.loginfo(len(data.markers))
             for tag in range(len(data.markers)):
                 tag_id = data.markers[tag].id
-                tag_x = -data.markers[tag].pose.pose.position.x
+                tag_x = data.markers[tag].pose.pose.position.x
                 tag_y = -data.markers[tag].pose.pose.position.y
                 tag_z = data.markers[tag].pose.pose.position.z
                 # rospy.loginfo("tag id =  %s", str(tag_id))
