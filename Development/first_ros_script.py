@@ -107,6 +107,8 @@ class ARTag():
 
         if data.markers:  # make sure data is not empty
 
+            Tag_Detected = True
+
             for tag in range(len(data.markers)):
 
                 tag_id = data.markers[tag].id
@@ -116,7 +118,7 @@ class ARTag():
                 tag_y = round(-data.markers[tag].pose.pose.position.y, 2)  # inverted in the camera's reference
                 tag_z = round(data.markers[tag].pose.pose.position.z, 2)
 
-                # pose
+                # pose angles (in radians).  range restricted: -pi to +pi
                 tag_angles = self.quaternion_to_euler(data.markers[tag])
 
                 # populate the global dict
@@ -125,6 +127,7 @@ class ARTag():
             rospy.loginfo("tags_dict = ")
             rospy.loginfo(Tags_Dict)
         else:
+            Tag_Detected = False
             # remember to empty the dict every loop
             Tags_Dict = {}
 
@@ -135,6 +138,10 @@ class ARTag():
 
 
     def quaternion_to_euler(self, artag):
+        """Uses the quaternion coordinates to calculate the euler angles.
+           Arguments: a data.marker object
+           Returns: a list of rounded floats in the form: [tag_yaw, tag_pitch, tag_roll]
+        """
 
         qt_x = artag.pose.pose.orientation.x
         qt_y = artag.pose.pose.orientation.y
@@ -144,13 +151,13 @@ class ARTag():
 
         quaternion = (qt_x, qt_y, qt_z, qt_w)
         euler = tf.transformations.euler_from_quaternion(quaternion)
-        tag_roll = euler[0]
-        tag_pitch = euler[1]
-        tag_yaw = euler[2]
+        tag_roll = round(euler[0], 2)
+        tag_pitch = round(euler[1], 2)
+        tag_yaw = round(euler[2], 2)
+
 
         return [tag_yaw, tag_pitch, tag_roll]
-        # return 0.0
-        # pass
+
     
 
     def arBufferer(self, tags):
@@ -300,9 +307,38 @@ class ARTag():
     #     self.r.sleep()
     #     # pass
 
+    def oriented_properly(self):
+        yaw_good = False
+        pitch_good = False
+        roll_good = False
+
+
+        for tag_id in Tags_Dict.keys():
+            tag_yaw = abs(Tags_Dict[tag_id][3])
+            tag_pitch = abs(Tags_Dict[tag_id][4])
+            tag_roll = abs(Tags_Dict[tag_id][5])
+
+            if 0.0 <= tag_yaw <= 0.2:
+                yaw_good = True
+            if 0.0 <= tag_pitch <= 0.2:
+                pitch_good = True
+            if 3.0 < tag_roll:
+                roll_good = True
+
+        return yaw_good and pitch_good and roll_good
+
+
 
     def fsm(self):
         # rospy.loginfo("Running fsm function\n")
+
+        if Tag_Detected:
+            if self.oriented_properly():
+                rospy.loginfo("Oriented properly!")
+            else:
+                rospy.loginfo("NOT oriented properly")
+
+
         self.r.sleep()
 
 
