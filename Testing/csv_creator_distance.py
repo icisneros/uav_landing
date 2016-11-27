@@ -465,7 +465,7 @@ class ARTag():
                     independent_var = Last_Known_var
 
                     rospy.loginfo("Writing to CSV file...\n")
-                    spamwriter.writerow(accuracy, independent_var)
+                    spamwriter.writerow([accuracy, independent_var])
                 
                 self.r.sleep()
 
