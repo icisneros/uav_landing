@@ -92,7 +92,7 @@ class ARTag():
         # rospy.loginfo("Tag_Detected")
         # rospy.loginfo(Tag_Detected)
 
-        if data:  # make sure data is not empty
+        if data.markers:  # make sure data is not empty
             rospy.loginfo("data = ")
             rospy.loginfo(data.markers[0])
 
