@@ -116,7 +116,7 @@ class ARTag():
                 tag_z = round(data.markers[tag].pose.pose.position.z, 2)
 
                 # pose
-                # tag_angles = quaternion_to_euler(data.markers[tag])
+                tag_angles = self.quaternion_to_euler(data.markers[tag])
 
                 # populate the global dict
                 Tags_Dict[tag_id] = [tag_x, tag_y, tag_z]
@@ -133,8 +133,23 @@ class ARTag():
 
 
 
-    def quaternion_to_euler(self):
-        pass
+    def quaternion_to_euler(self, artag):
+
+        qt_x = artag.pose.pose.orientation.x
+        qt_y = artag.pose.pose.orientation.y
+        qt_z = artag.pose.pose.orientation.z
+        qt_w = artag.pose.pose.orientation.w
+
+
+
+        # tag_yaw = 
+        # tag_pitch
+        # tag_roll
+
+
+        # return [tag_yaw, tag_pitch, tag_roll]
+        return 0.0
+        # pass
     
 
     def arBufferer(self, tags):
