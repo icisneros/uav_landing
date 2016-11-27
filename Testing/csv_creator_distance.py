@@ -444,8 +444,11 @@ class ARTag():
 
             if Tag_Detected:  # we care about starting only when ready (aka tag has been detected at least once)
                
+                rospy.loginfo("Inside Tag_Detected...\n")
+
                 while not rospy.is_shutdown():
-                    
+
+                    rospy.loginfo("Inside the while not...\n")
                     
                     # Testing, CSV stuff:
                     ITERATIONS += 1
