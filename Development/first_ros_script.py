@@ -41,6 +41,7 @@ import tf
 # import numpy as np 
 import math
 from math import radians
+import copy
 
 
 
@@ -48,6 +49,7 @@ from math import radians
 
 # AR Tag stuff
 Tag_Detected = False
+Multiple_Tags = False
 Tags_Detected_List = []
 Tags_Buffer = [None, None, None, None, None, None]
 TAGS_BUFFER_SIZE = 6  # !!! The amount of frames that are buffered
@@ -65,6 +67,18 @@ Tags_Dict = {}
 # tag_yaw:    Tags_Dict[tag_id][3]
 # tag_pitch:  Tags_Dict[tag_id][4]
 # tag_roll:   Tags_Dict[tag_id][5]
+
+
+TAG0 = 0
+TAG1 = 1
+TAG2 = 2
+TAG3 = 3
+TAG4 = 4
+TAG5 = 5
+TAG6 = 6
+TAG7 = 7
+TAG8 = 8
+TAG9 = 9
 
 
 
@@ -91,7 +105,7 @@ class ARTag():
         global Tag_Detected
         global Tags_Detected_List
         global Tags_Dict
-        # rospy.loginfo("data: ")
+        global Multiple_Tags
 
         # buffered_bool, buffered_list = self.arBufferer(data.markers)
         # # data.markers
@@ -109,7 +123,12 @@ class ARTag():
 
             Tag_Detected = True
 
-            for tag in range(len(data.markers)):
+            len_of_dict = len(data.markers)
+
+            if len_of_dict > 1:
+                Multiple_Tags = True
+
+            for tag in range(len_of_dict):
 
                 tag_id = data.markers[tag].id
 
@@ -128,6 +147,7 @@ class ARTag():
             rospy.loginfo(Tags_Dict)
         else:
             Tag_Detected = False
+            Multiple_Tags = False
             # remember to empty the dict every loop
             Tags_Dict = {}
 
@@ -197,41 +217,6 @@ class ARTag():
 
         return tagDetected, buffered_tag_list
 
-
-    def returnIDandCoord(self,listItem):
-        """Returns a tuple
-           in the form (tagID_1, (x_1,y_1,z_1))
-        """
-        tagID = listItem.id
-        x = listItem.pose.pose.position.x
-        y = listItem.pose.pose.position.y
-        z = listItem.pose.pose.position.z
-        return (tagID, (x,y,z))
-
-
-    def convertTagPosition(self, tagList):
-        """Returns a list
-           in the form [(tagID_1, (x_1,y_1,z_1)), (tagID_2, (x_2,y_2,z_2)), ...]
-        """
-        newList = []
-        if tagList is not None:
-            sizeOf = len(tagList)
-        else:
-            sizeOf = 0
-        if sizeOf > 0:  # ideally this case is checked before the function is called...
-            for i in range(0, sizeOf):
-                useful = self.returnIDandCoord(tagList[i])
-                newList.append(useful)
-        else:
-            return None
-
-        return newList, sizeOf
-
-
-    def lastSeenTagUpdate(self, tag):
-        global Last_Seen_Tag
-        if tag is not None:
-            Last_Seen_Tag = tag
 
 
 
@@ -307,33 +292,78 @@ class ARTag():
     #     self.r.sleep()
     #     # pass
 
-    def oriented_properly(self):
+    def oriented_properly(self, single_est):
+        """Returns a boolean which states whether the orientation is proper.
+           'Proper' orientation is defined as:
+           yaw ~ 0
+           pitch ~ 0
+           roll ~ +/- pi
+
+           Thresholds give around 15 degrees (0.2 rad) of leeway in each direction of rotation 
+           (since we use the absolute value of the angle)
+
+           Argument single_est is a dict with only on key value pair.  It is either a single tag
+           id (since only one was identified) or the id = 'center'
+
+        """
         yaw_good = False
         pitch_good = False
         roll_good = False
 
 
-        for tag_id in Tags_Dict.keys():
-            tag_yaw = abs(Tags_Dict[tag_id][3])
-            tag_pitch = abs(Tags_Dict[tag_id][4])
-            tag_roll = abs(Tags_Dict[tag_id][5])
+        for tag_id in single_est.keys():
+            tag_yaw = abs(single_est[tag_id][3])
+            tag_pitch = abs(single_est[tag_id][4])
+            tag_roll = abs(single_est[tag_id][5])
 
             if 0.0 <= tag_yaw <= 0.2:
                 yaw_good = True
             if 0.0 <= tag_pitch <= 0.2:
                 pitch_good = True
-            if 3.0 < tag_roll:
+            if 2.9 < tag_roll:
                 roll_good = True
 
         return yaw_good and pitch_good and roll_good
 
+
+    def mean_measurements(self):
+        """If multiple tags are detected, returns a dict with the mean measurements of positions
+           and orientations.
+
+           Returns a dict of format: {'center': [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]}
+
+        """
+
+        num_of_tags = len(Tags_Dict)
+
+        mean_x = 0.0
+        mean_y = 0.0
+        mean_z = 0.0
+        mean_yaw = 0.0
+        mean_pitch = 0.0
+        mean_roll = 0.0
+
+        
+        m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
+        m_measurements = [ round(elem, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
+
+        return {'center': m_measurements}
 
 
     def fsm(self):
         # rospy.loginfo("Running fsm function\n")
 
         if Tag_Detected:
-            if self.oriented_properly():
+
+            single_estimate = copy.deepcopy(Tags_Dict)
+
+            if Multiple_Tags:
+                # If multiple tags are detected, get the means
+                single_estimate = self.mean_measurements()
+                # other wise, single_estimate dict has only one key value pair
+
+            # Check if orientation is proper
+            if self.oriented_properly(single_estimate):
                 rospy.loginfo("Oriented properly!")
             else:
                 rospy.loginfo("NOT oriented properly")
@@ -369,7 +399,7 @@ class ARTag():
 
 
 
-        rospy.loginfo("Finished init...")
+        rospy.loginfo("Finished init...\n")
         while not rospy.is_shutdown():
             self.fsm()
 
