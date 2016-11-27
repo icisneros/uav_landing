@@ -442,32 +442,32 @@ class ARTag():
             
             rospy.loginfo("Begin writing to csv file...\n")
 
-            if Tag_Detected:  # we care about starting only when ready (aka tag has been detected at least once)
+            # if Tag_Detected:  # we care about starting only when ready (aka tag has been detected at least once)
                
-                rospy.loginfo("Inside Tag_Detected...\n")
+            rospy.loginfo("Inside Tag_Detected...\n")
 
-                while not rospy.is_shutdown():
+            while not rospy.is_shutdown():
 
-                    rospy.loginfo("Inside the while not...\n")
+                rospy.loginfo("Inside the while not...\n")
+                
+                # Testing, CSV stuff:
+                ITERATIONS += 1
+
+                # make sure we only iterate NUMBER_DETECTED if tag 0 is detected
+                if Tag_Detected and (Tags_Dict.keys()[0] == TAG0):
+                    NUMBER_DETECTED += 1
                     
-                    # Testing, CSV stuff:
-                    ITERATIONS += 1
+                    Last_Known_var = round(Tags_Dict[0][TAGX],2)   # ********************************************************************************
 
-                    # make sure we only iterate NUMBER_DETECTED if tag 0 is detected
-                    if Tag_Detected and (Tags_Dict.keys()[0] == TAG0):
-                        NUMBER_DETECTED += 1
-                        
-                        Last_Known_var = round(Tags_Dict[0][TAGX],2)   # ********************************************************************************
+                # at MAX_ITERS number of iterations, calculate the detection percentage vs the independent variable
+                if ITERATIONS == MAX_ITERS:
+                    accuracy = (NUMBER_DETECTED / ITERATIONS) * 100  # given as a percentage
+                    independent_var = Last_Known_var
 
-                    # at MAX_ITERS number of iterations, calculate the detection percentage vs the independent variable
-                    if ITERATIONS == MAX_ITERS:
-                        accuracy = (NUMBER_DETECTED / ITERATIONS) * 100  # given as a percentage
-                        independent_var = Last_Known_var
-
-                        rospy.loginfo("Writing to CSV file...\n")
-                        spamwriter.writerow(accuracy, independent_var)
-                    
-                    self.r.sleep()
+                    rospy.loginfo("Writing to CSV file...\n")
+                    spamwriter.writerow(accuracy, independent_var)
+                
+                self.r.sleep()
 
 
 
