@@ -96,7 +96,7 @@ class ARTag():
             # rospy.loginfo("data length = ")
             # rospy.loginfo(len(data.markers))
             for tag in range(data.markers):
-                tag_id = data.markers[tag]
+                tag_id = data.markers[tag].id
                 rospy.loginfo("tag id =  %s", str(tag_id))
 
 
