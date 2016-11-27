@@ -260,7 +260,7 @@ class ARTag():
         rospy.loginfo("Initializing...")
 
         # offers a convenient way for looping at the desired rate. Default is 10hz
-        self.r = rospy.Rate(10);
+        self.r = rospy.Rate(30);
 
         self.bridge = CvBridge()
 
