@@ -450,7 +450,7 @@ class ARTag():
                     ITERATIONS += 1
 
                     # make sure we only iterate NUMBER_DETECTED if tag 0 is detected
-                    if Tag_Detected and Tags_Dict.keys()[0] = TAG0:
+                    if Tag_Detected and (Tags_Dict.keys()[0] == TAG0):
                         NUMBER_DETECTED += 1
                         
                         Last_Known_var = round(Tags_Dict[0][TAGX],2)   # ********************************************************************************
