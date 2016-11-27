@@ -93,8 +93,11 @@ class ARTag():
         # rospy.loginfo(Tag_Detected)
 
         if data.markers:  # make sure data is not empty
-            rospy.loginfo("data length = ")
-            rospy.loginfo(len(data.markers))
+            # rospy.loginfo("data length = ")
+            # rospy.loginfo(len(data.markers))
+            for tag in range(data.markers):
+                tag_id = data.markers[tag]
+                rospy.loginfo("tag id =  %s", str(tag_id))
 
 
 
