@@ -96,7 +96,7 @@ TAG9 = 9
 # For testing 
 ITERATIONS = 0
 NUMBER_DETECTED = 0
-Last_Known_vars = [0.0]
+Last_Known_vars = []
 DATA_POINT = 1
 
 TAGX = 0
