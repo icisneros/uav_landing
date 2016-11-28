@@ -411,9 +411,6 @@ class ARTag():
         # all values in the list are from a valid detection. Thus, all should be counted
         num_of_vars = len(Last_Known_vars)
 
-        rospy.loginfo("num_of_vars = ")
-        rospy.loginfo(num_of_vars)
-
         if num_of_vars == 1:
             return Last_Known_vars
 
@@ -426,23 +423,20 @@ class ARTag():
 
         # [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
 
-        rospy.loginfo("Last_Known_vars = ")
-        rospy.loginfo(Last_Known_vars)
         for i in range(num_of_vars):
-            rospy.loginfo(Last_Known_vars[i][0])
-            # mean_x = mean_x + Last_Known_vars[i][0]
-        #     mean_y += Last_Known_vars[i][1]
-        #     mean_z += Last_Known_vars[i][2]
-        #     mean_yaw += Last_Known_vars[i][3]
-        #     mean_pitch += Last_Known_vars[i][4]
-        #     mean_roll += Last_Known_vars[i][5]
+            mean_x = mean_x + Last_Known_vars[i][0]
+            mean_y += Last_Known_vars[i][1]
+            mean_z += Last_Known_vars[i][2]
+            mean_yaw += Last_Known_vars[i][3]
+            mean_pitch += Last_Known_vars[i][4]
+            mean_roll += Last_Known_vars[i][5]
 
         
-        # m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
-        # m_measurements = [ round(elem, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
+        m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
+        m_measurements = [ round(float(elem)/num_of_vars, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
 
-        # return m_measurements
-        return []
+        return m_measurements
+        # return []
 
 
 
