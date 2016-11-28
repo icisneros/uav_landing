@@ -481,6 +481,7 @@ class ARTag():
 
                     DATA_POINT += 1
                     ITERATIONS = 0
+                    NUMBER_DETECTED = 0
                 
 
                 self.r.sleep()
