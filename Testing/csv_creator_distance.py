@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
 
+# Testing Control
+CSV_NAME = 'measz_vs_actz_tag10cm_05m.csv'
+MAX_ITERS = 1
+
+
 """
 -----------------------------------------------------------------------------------------
 AR Tag Experimentations
@@ -99,12 +104,6 @@ TAGZ = 2
 TAGYAW = 3
 TAGPITCH = 4
 TAGROLL = 5
-
-
-# Testing Control
-CSV_NAME = 'test.csv'
-MAX_ITERS = 1
-
 
 
 
