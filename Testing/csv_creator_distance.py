@@ -103,7 +103,7 @@ TAGROLL = 5
 
 # Testing Control
 CSV_NAME = 'test.csv'
-MAX_ITERS = 10
+MAX_ITERS = 1
 
 
 
@@ -487,8 +487,6 @@ class ARTag():
 
 
     def shutdown(self):
-
-
         cv2.destroyAllWindows()
         # stop robot
         rospy.loginfo("Stopping Script")
