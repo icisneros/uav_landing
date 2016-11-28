@@ -517,7 +517,7 @@ class ARTag():
                         which_vars = Last_Known_vars[0]
                     
                     # Only worry about the mean if doing one of the accuracy measurements, otherwise no
-                    if MAX_ITERS != 1:
+                    if MAX_ITERS != 1 and (len(Last_Known_vars) > 1):
                         which_vars = self.mean_vars()
 
                     rospy.loginfo("Writing to CSV file...\n")
