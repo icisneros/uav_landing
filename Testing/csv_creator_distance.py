@@ -401,38 +401,38 @@ class ARTag():
 
     #     self.r.sleep()
 
-    def mean_vars(self):
-        """If multiple tags are detected, returns a dict with the mean measurements of positions
-           and orientations.
+    # def mean_vars(self):
+    #     """If multiple tags are detected, returns a dict with the mean measurements of positions
+    #        and orientations.
 
-           Returns a dict of format: {'center': [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]}
+    #        Returns a dict of format: {'center': [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]}
 
-        """
-        # all values in the list are from a valid detection. Thus, all should be counted
-        num_of_vars = len(Last_Known_vars)
+    #     """
+    #     # all values in the list are from a valid detection. Thus, all should be counted
+    #     num_of_vars = len(Last_Known_vars)
 
-        mean_x = 0.0
-        mean_y = 0.0
-        mean_z = 0.0
-        mean_yaw = 0.0
-        mean_pitch = 0.0
-        mean_roll = 0.0
+    #     mean_x = 0.0
+    #     mean_y = 0.0
+    #     mean_z = 0.0
+    #     mean_yaw = 0.0
+    #     mean_pitch = 0.0
+    #     mean_roll = 0.0
 
-        # [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
+    #     # [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
 
-        for i in range(num_of_vars):
-            mean_x += Last_Known_vars[i][0]
-            mean_y += Last_Known_vars[i][1]
-            mean_z += Last_Known_vars[i][2]
-            mean_yaw += Last_Known_vars[i][3]
-            mean_pitch += Last_Known_vars[i][4]
-            mean_roll += Last_Known_vars[i][5]
+    #     for i in range(num_of_vars):
+    #         mean_x += Last_Known_vars[i][0]
+    #         mean_y += Last_Known_vars[i][1]
+    #         mean_z += Last_Known_vars[i][2]
+    #         mean_yaw += Last_Known_vars[i][3]
+    #         mean_pitch += Last_Known_vars[i][4]
+    #         mean_roll += Last_Known_vars[i][5]
 
         
-        m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
-        m_measurements = [ round(elem, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
+    #     m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
+    #     m_measurements = [ round(elem, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
 
-        return m_measurements
+    #     return m_measurements
 
 
 
