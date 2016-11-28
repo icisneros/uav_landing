@@ -511,8 +511,10 @@ class ARTag():
                 if ITERATIONS == MAX_ITERS:
                     accuracy = (float(NUMBER_DETECTED) / ITERATIONS) * 100  # given as a percentage
                     # independent_var = Last_Known_vars
+                    which_vars = Last_Known_vars
 
-                    which_vars = Last_Known_vars[0]
+                    if (len(Last_Known_vars)) == 1:
+                        which_vars = Last_Known_vars[0]
                     
                     # Only worry about the mean if doing one of the accuracy measurements, otherwise no
                     if MAX_ITERS != 1:
