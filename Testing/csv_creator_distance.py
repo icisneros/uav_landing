@@ -445,12 +445,12 @@ class ARTag():
 
         with open(CSV_NAME, 'wb') as csvfile:
 
-            fieldnames = ['data point, accuracy (percentage)', 'tag_x', 'tag_y', 'tag_z', 'tag_yaw', 'tag_pitch', 'tag_roll']
+            # fieldnames = ['data point, accuracy (percentage)', 'tag_x', 'tag_y', 'tag_z', 'tag_yaw', 'tag_pitch', 'tag_roll']
 
-            spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL, fieldnames=fieldnames)
+            spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             
             rospy.loginfo("Begin writing to csv file...\n")
-            writer.writeheader()
+            # writer.writeheader()
 
             # if Tag_Detected:  # we care about starting only when ready (aka tag has been detected at least once)
                
