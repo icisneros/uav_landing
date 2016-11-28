@@ -2,8 +2,8 @@
 
 
 # Testing Control
-CSV_NAME = 'measyaw_vs_actyaw_tag10cm_270deg_2mzdist.csv'
-MAX_ITERS = 1
+CSV_NAME = 'acc_vs_zdist_tag10cm_0_5mstart.csv'
+MAX_ITERS = 10
 
 
 """
