@@ -429,7 +429,7 @@ class ARTag():
         rospy.loginfo("Last_Known_vars = ")
         rospy.loginfo(Last_Known_vars)
         for i in range(num_of_vars):
-            rospy.loginfo(i)
+            rospy.loginfo(Last_Known_vars[i][0])
             # mean_x = mean_x + Last_Known_vars[i][0]
         #     mean_y += Last_Known_vars[i][1]
         #     mean_z += Last_Known_vars[i][2]
