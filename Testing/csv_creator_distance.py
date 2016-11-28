@@ -480,6 +480,7 @@ class ARTag():
                     spamwriter.writerow([DATA_POINT, accuracy] + Last_Known_vars)
 
                     DATA_POINT += 1
+                    ITERATIONS = 0
                 
 
                 self.r.sleep()
