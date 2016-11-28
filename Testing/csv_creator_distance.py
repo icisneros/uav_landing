@@ -427,7 +427,8 @@ class ARTag():
         # [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
 
         for i in range(num_of_vars):
-            mean_x = mean_x + Last_Known_vars[i][0]
+            rospy.loginfo(i)
+            # mean_x = mean_x + Last_Known_vars[i][0]
         #     mean_y += Last_Known_vars[i][1]
         #     mean_z += Last_Known_vars[i][2]
         #     mean_yaw += Last_Known_vars[i][3]
