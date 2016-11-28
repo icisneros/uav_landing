@@ -2,7 +2,7 @@
 
 
 # Testing Control
-CSV_NAME = 'measz_vs_actz_tag10cm_05m.csv'
+CSV_NAME = 'measz_vs_actz_tag10cm_2_5m.csv'
 MAX_ITERS = 1
 
 
@@ -457,7 +457,7 @@ class ARTag():
 
             while not rospy.is_shutdown():
 
-                rospy.loginfo("Inside the while not...\n")
+                # rospy.loginfo("Inside the while not...\n")
                 
                 # Testing, CSV stuff:
                 ITERATIONS += 1
