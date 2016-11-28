@@ -472,7 +472,7 @@ class ARTag():
 
                 # at MAX_ITERS number of iterations, calculate the detection percentage vs the independent variable
                 if ITERATIONS == MAX_ITERS:
-                    accuracy = (NUMBER_DETECTED / ITERATIONS) * 100  # given as a percentage
+                    accuracy = (float(NUMBER_DETECTED) / ITERATIONS) * 100  # given as a percentage
                     # independent_var = Last_Known_vars
 
                     rospy.loginfo("Writing to CSV file...\n")
