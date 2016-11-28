@@ -92,7 +92,7 @@ TAG9 = 9
 ITERATIONS = 0
 NUMBER_DETECTED = 0
 Last_Known_var = 0.0
-DATA_POINT = 0
+DATA_POINT = 1
 
 TAGX = 0
 TAGZ = 2
@@ -413,6 +413,7 @@ class ARTag():
         global ITERATIONS
         global NUMBER_DETECTED
         global Last_Known_vars
+        global DATA_POINT
 
 
 
