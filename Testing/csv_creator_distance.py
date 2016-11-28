@@ -2,7 +2,7 @@
 
 
 # Testing Control
-CSV_NAME = 'acc_vs_zdist_tag10cm_0_25mstart.csv'
+CSV_NAME = 'acc_vs_xoffs_tag10cm_5m.csv'
 MAX_ITERS = 10
 
 
@@ -478,7 +478,8 @@ class ARTag():
                     rospy.loginfo("Writing to CSV file...\n")
                     spamwriter.writerow([DATA_POINT, accuracy] + Last_Known_vars)
 
-                    DATA_POINT += 1
+                    rospy.loginfo("Datapoint = %s", str(DATA_POINT))
+		    DATA_POINT += 1
                     ITERATIONS = 0
                     NUMBER_DETECTED = 0
                 
