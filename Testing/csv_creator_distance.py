@@ -401,7 +401,38 @@ class ARTag():
 
     #     self.r.sleep()
 
+    def mean_vars(self):
+        """If multiple tags are detected, returns a dict with the mean measurements of positions
+           and orientations.
 
+           Returns a dict of format: {'center': [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]}
+
+        """
+        # all values in the list are from a valid detection. Thus, all should be counted
+        num_of_vars = len(Last_Known_vars)
+
+        mean_x = 0.0
+        mean_y = 0.0
+        mean_z = 0.0
+        mean_yaw = 0.0
+        mean_pitch = 0.0
+        mean_roll = 0.0
+
+        # [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
+
+        for i in range(num_of_vars):
+            mean_x += Last_Known_vars[i][0]
+            mean_y += Last_Known_vars[i][1]
+            mean_z += Last_Known_vars[i][2]
+            mean_yaw += Last_Known_vars[i][3]
+            mean_pitch += Last_Known_vars[i][4]
+            mean_roll += Last_Known_vars[i][5]
+
+        
+        m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
+        m_measurements = [ round(float(elem)/num_of_vars, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
+
+        return m_measurements
 
 
 
@@ -467,21 +498,30 @@ class ARTag():
                     NUMBER_DETECTED += 1
                     
 
-                    Last_Known_vars = [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
-                    Last_Known_vars = [ round(elem, 2) for elem in Last_Known_vars ]
+                    vars_round = [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
+                    vars_round = [ round(elem, 2) for elem in vars_round ]
+
+                    Last_Known_vars = Last_Known_vars + vars_round
 
                 # at MAX_ITERS number of iterations, calculate the detection percentage vs the independent variable
                 if ITERATIONS == MAX_ITERS:
                     accuracy = (float(NUMBER_DETECTED) / ITERATIONS) * 100  # given as a percentage
                     # independent_var = Last_Known_vars
 
+                    which_vars = Last_Known_vars
+                    
+                    # Only worry about the mean if doing one of the accuracy measurements, otherwise no
+                    if MAX_ITERS != 1:
+                        which_vars = self.mean_vars()
+
                     rospy.loginfo("Writing to CSV file...\n")
-                    spamwriter.writerow([DATA_POINT, accuracy] + Last_Known_vars)
+                    spamwriter.writerow([DATA_POINT, accuracy] + which_vars)
 
                     rospy.loginfo("Datapoint = %s", str(DATA_POINT))
-		    DATA_POINT += 1
+                    DATA_POINT += 1
                     ITERATIONS = 0
                     NUMBER_DETECTED = 0
+                    Last_Known_vars = []
                 
 
                 self.r.sleep()
