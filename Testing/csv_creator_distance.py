@@ -508,14 +508,14 @@ class ARTag():
                     vars_round = [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
                     vars_round = [ round(elem, 2) for elem in vars_round ]
 
-                    Last_Known_vars = Last_Known_vars + vars_round
+                    Last_Known_vars.append(vars_round)
 
                 # at MAX_ITERS number of iterations, calculate the detection percentage vs the independent variable
                 if ITERATIONS == MAX_ITERS:
                     accuracy = (float(NUMBER_DETECTED) / ITERATIONS) * 100  # given as a percentage
                     # independent_var = Last_Known_vars
 
-                    which_vars = Last_Known_vars
+                    which_vars = Last_Known_vars[0]
                     
                     # Only worry about the mean if doing one of the accuracy measurements, otherwise no
                     if MAX_ITERS != 1:
