@@ -68,7 +68,7 @@ def median_distance():
         distances.remove(0.0)
 
     if num_nonzero >= 2:  # if 2/3 values are non zero, return the median
-        return np.median(distances)
+        return round(np.median(distances), 2)
         # return reduce(lambda x, y: x + y, distances) / num_nonzero
     else:
         return 0.0
