@@ -43,7 +43,7 @@ if __name__ == '__main__':
 	try:
 		# For continuous reading
 		while True:
-			print "Median Distance: ", median_distance(),"cm\n"
+			print "Median Distance: ", median_distance(),"m\n"
 
 		# For a single shot read
 		# rf.distance_read()

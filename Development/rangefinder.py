@@ -42,6 +42,7 @@ class RangeFinder:
 		GPIO.output(self.TRIG, True)
 		time.sleep(0.00001)  # 10uS pules
 		GPIO.output(self.TRIG, False)
+		pulse_end = 1980458336
 
 		# listen for the echo
 		while GPIO.input(self.ECHO)==0:
@@ -66,7 +67,8 @@ class RangeFinder:
 		# distance in meters
 		distance_m = distance / 100  # 171.50 = (343 m/s) / 2
 
-		# print "Raw travel time: ",pulse_duration,"s"
+		# print "pulse_end: ",pulse_end
+		print "raw time: ", pulse_duration
 		# print "Distance (meters):",distance_m,"meters"
 
 		# print "Distance (cm):",distance,"cm\n"
