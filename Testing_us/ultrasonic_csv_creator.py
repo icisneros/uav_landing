@@ -23,14 +23,6 @@ with sudo
 -----------------------------------------------------------------------------------------
 """
 
-# OpenCV
-import cv2
-from cv_bridge import CvBridge, CvBridgeError
-
-# ROS
-import rospy
-from ar_track_alvar_msgs.msg import *
-import tf
 
 # Peripheral libraries
 # import numpy as np 
