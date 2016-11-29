@@ -5,6 +5,8 @@ import numpy as np
 def median_distance():
 	"""Takes 3 readings. If 2/3 values are non zero, return the median value. Else
 	   returns 0.0
+           Why median?  A median is more trustworthy when there is a reasonable likelihood 
+           of noise.  (E.g. if data = [20,100,105,103] then mean = 82, but median = 101.5)
 	"""
 
 	distances = []
