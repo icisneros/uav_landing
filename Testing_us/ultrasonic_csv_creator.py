@@ -42,7 +42,7 @@ import numpy as np
 
 # For testing 
 ITERATIONS = 0
-Last_Known_vars = []
+NUMBER_DETECTED = 0
 DATA_POINT = 1
 
 
@@ -128,7 +128,6 @@ if __name__ == '__main__':
                     DATA_POINT += 1
                     ITERATIONS = 0
                     NUMBER_DETECTED = 0
-                    Last_Known_vars = []
 
 
     except KeyboardInterrupt:
