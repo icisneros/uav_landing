@@ -17,7 +17,7 @@ def median_distance():
 
 	num_nonzero = 0
 	for i in range(0,3):
-		if distances[1] != 0.0:
+		if distances[i] != 0.0:
 			num_nonzero += 1
 	
 	# remove the zeros
