@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 # Testing Control
-CSV_NAME = 'test.csv'
-# CSV_NAME = 'measz_vs_xoffs_0.01moffs_0_25m.csv'
+# CSV_NAME = 'measz_vs_actz_cluster_10_0m'
+CSV_NAME = 'xoffs_4_0m_10_0mzdist.csv'
 # CSV_NAME = 'acc_vs_zdist_0_25mstart.csv'
 ACT_DIST = 0.25   # in meters
 XOFFS = 0   # in meters
