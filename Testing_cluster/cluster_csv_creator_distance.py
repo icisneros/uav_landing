@@ -424,6 +424,7 @@ class ARTag():
         with open(CSV_NAME, 'wb') as csvfile:
 
             # fieldnames = ['data point', 'accuracy (percentage)', 'mean_x', 'mean_y', 'mean_z', 'mean_yaw', 'mean_pitch', 'mean_roll', multiple, numberoftags, tag0dtctd, tag1dtctd, tag2dtctd, tag3dtctd, tag4dtctd]
+            # plus the individual tag data in order: tag0, tag1, tag2, tag3, tag4
             # for 'multiple' and tagXdtctd' categories: 1 means yes, 0 means no
 
             spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -447,7 +448,12 @@ class ARTag():
                 tag4dtctd = 0   # boolean
 
                 # ['mean_x', 'mean_y', 'mean_z', 'mean_yaw', 'mean_pitch', 'mean_roll']
-                vars_round = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                mean_info = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                tag0info = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                tag1info = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                tag2info = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                tag3info = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                tag4info = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
                 # make sure we only iterate NUMBER_DETECTED if tag 0 is detected
                 if Tag_Detected:
@@ -458,14 +464,19 @@ class ARTag():
                         numberoftags += 1
                         if tagid == TAG0:
                             tag0dtctd = 1
+                            tag0info = [Tags_Dict[TAG0][TAGX], Tags_Dict[TAG0][TAGY], Tags_Dict[TAG0][TAGZ], Tags_Dict[TAG0][TAGYAW], Tags_Dict[TAG0][TAGPITCH], Tags_Dict[TAG0][TAGROLL]]
                         elif tagid == TAG1:
                             tag1dtctd = 1
+                            tag1info = [Tags_Dict[TAG1][TAGX], Tags_Dict[TAG1][TAGY], Tags_Dict[TAG1][TAGZ], Tags_Dict[TAG1][TAGYAW], Tags_Dict[TAG1][TAGPITCH], Tags_Dict[TAG1][TAGROLL]]
                         elif tagid == TAG2:
                             tag2dtctd = 1
+                            tag2info = [Tags_Dict[TAG2][TAGX], Tags_Dict[TAG2][TAGY], Tags_Dict[TAG2][TAGZ], Tags_Dict[TAG2][TAGYAW], Tags_Dict[TAG2][TAGPITCH], Tags_Dict[TAG2][TAGROLL]]
                         elif tagid == TAG3:
                             tag3dtctd = 1
+                            tag3info = [Tags_Dict[TAG3][TAGX], Tags_Dict[TAG3][TAGY], Tags_Dict[TAG3][TAGZ], Tags_Dict[TAG3][TAGYAW], Tags_Dict[TAG3][TAGPITCH], Tags_Dict[TAG3][TAGROLL]]
                         elif tagid == TAG4:
                             tag4dtctd = 1
+                            tag4info = [Tags_Dict[TAG4][TAGX], Tags_Dict[TAG4][TAGY], Tags_Dict[TAG4][TAGZ], Tags_Dict[TAG4][TAGYAW], Tags_Dict[TAG4][TAGPITCH], Tags_Dict[TAG4][TAGROLL]]
 
                     # the idea is to have a single dict, whether a single tag is seen or multiple tags
                     single_estimate = copy.deepcopy(Tags_Dict)
@@ -479,13 +490,13 @@ class ARTag():
                             
                     onek = single_estimate.keys()[0]
 
-                    vars_round = [single_estimate[onek][TAGX], single_estimate[onek][TAGY], single_estimate[onek][TAGZ], single_estimate[onek][TAGYAW], single_estimate[onek][TAGPITCH], single_estimate[onek][TAGROLL]]
+                    mean_info = [single_estimate[onek][TAGX], single_estimate[onek][TAGY], single_estimate[onek][TAGZ], single_estimate[onek][TAGYAW], single_estimate[onek][TAGPITCH], single_estimate[onek][TAGROLL]]
 
                 # if no tags detected, will be all zeros (since none of the variables will have changed)
                 which_vars = [multiple, numberoftags, tag0dtctd, tag1dtctd, tag2dtctd, tag3dtctd, tag4dtctd]
 
                 rospy.loginfo("Writing to CSV file...\n")
-                spamwriter.writerow([DATA_POINT] + vars_round + which_vars)
+                spamwriter.writerow([DATA_POINT] + mean_info + which_vars + tag0info + tag1info + tag2info + tag3info + tag4info)
 
                 rospy.loginfo("Datapoint = %s", str(DATA_POINT))
                 DATA_POINT += 1
