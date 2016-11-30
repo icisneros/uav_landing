@@ -2,7 +2,7 @@
 
 # Testing Control
 # CSV_NAME = 'measz_vs_actz_cluster_10_0m'
-CSV_NAME = 'xoffs_4_0m_10_0mzdist.csv'
+CSV_NAME = 'xoffs_5_0m_10_0mzdist.csv'
 # CSV_NAME = 'acc_vs_zdist_0_25mstart.csv'
 ACT_DIST = 0.25   # in meters
 XOFFS = 0   # in meters
