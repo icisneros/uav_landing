@@ -315,7 +315,7 @@ class ARTag():
 
         
         m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
-        m_measurements = [ round(float(elem)/num_of_vars, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
+        m_measurements = [ round(float(elem)/num_of_tags, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
 
         return {'center': m_measurements}
 
