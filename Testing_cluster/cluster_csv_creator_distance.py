@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
 # Testing Control
-CSV_NAME = 'measz_vs_actz_3_00m.csv'
+CSV_NAME = 'test.csv'
 # CSV_NAME = 'measz_vs_xoffs_0.01moffs_0_25m.csv'
 # CSV_NAME = 'acc_vs_zdist_0_25mstart.csv'
-MAX_ITERS = 10
 ACT_DIST = 0.25   # in meters
 XOFFS = 0   # in meters
-
+# MAX_ITERS = 10
 
 
 """
