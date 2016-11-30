@@ -218,80 +218,6 @@ class ARTag():
         return tagDetected, buffered_tag_list
 
 
-
-
-    # def lastSeenTagUpdate(self, tag):
-    #     global Last_Seen_Tag
-    #     if tag is not None:
-    #         Last_Seen_Tag = tag
-
-
-    # def isolateATag(self, idTagToIsolate):
-    #     """Returns the (x,y,z) coordinates of a specific tag
-    #        If tag not in the list of visible tags, returns None
-    #     """
-    #     #tagsList = list(Tags_Detected_List)
-
-    #     if Tag_Detected:
-    #         tags, sizeOf = self.convertTagPosition(Tags_Detected_List)
-
-    #         if sizeOf > 0:  # ideally this case is checked before the function is called...
-    #             for i in range(0, sizeOf):
-    #                 tagID, tag_coords = tags[i]
-
-    #                 if tagID == idTagToIsolate:
-    #                     return tag_coords
-
-    #             # Case where wanted tag is not in the list of visible tags
-    #             return None
-    #         else:
-    #             # Odd case where Tag_Detected is true but that data list is empty
-    #             rospy.loginfo("Error, AR tags list is empty")
-    #             return None
-    #     else:
-    #         rospy.loginfo("Error, no AR tags in sight. Can't use this function.")
-    #         return None
-
-
-
-    # def fsm(self):
-    #     global STATE
-        
-    #     # Sense before entering finite state machine
-    #     if Tags_Detected_List is not None:
-    #         tagsList = list(Tags_Detected_List)
-    #     else: 
-    #         tagsList = None
-    #     tagDetected = Tag_Detected
-    #     # if not OBSTACLE_DETECTED:
-
-    #     move_recommend = Twist()
-    #     move_recommend.linear.x = 0
-    #     move_recommend.angular.z = 0
-
-    #     if tagDetected:
-    #         rospy.loginfo("move_recommend.angular.z")
-    #         if tagsList is not None:
-    #             tags, tags_list_size = self.convertTagPosition(tagsList)
-    #         else:
-    #             tags = Last_Seen_Tag
-
-    #         # rospy.loginfo("tags[0]")
-    #         # rospy.loginfo(tags[0])
-
-    #         # rospy.loginfo("approachATag")
-    #         move_recommend = self.approachATag(tags[0])
-    #         # rospy.loginfo("Done with approachATag")
-
-    
-    #     rospy.loginfo("Last seen tag")
-    #     rospy.loginfo(Last_Seen_Tag)
-    #     # rospy.loginfo("move_recommend.angular.z")
-    #     # rospy.loginfo(move_recommend.angular.z)
-    #     self.wheels.publish(move_recommend)
-    #     self.r.sleep()
-    #     # pass
-
     def oriented_properly(self, single_est):
         """Returns a boolean which states whether the orientation is proper.
            'Proper' orientation is defined as:
@@ -344,6 +270,13 @@ class ARTag():
         mean_roll = 0.0
 
         ## TODO: get the means
+        for tagid in Tags_Dict.keys():
+            mean_x += Last_Known_vars[i][0]
+            mean_y += Last_Known_vars[i][1]
+            mean_z += Last_Known_vars[i][2]
+            mean_yaw += Last_Known_vars[i][3]
+            mean_pitch += Last_Known_vars[i][4]
+            mean_roll += Last_Known_vars[i][5]
 
         
         m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
@@ -353,7 +286,6 @@ class ARTag():
 
 
     def fsm(self):
-        # rospy.loginfo("Running fsm function\n")
 
         if Tag_Detected:
 

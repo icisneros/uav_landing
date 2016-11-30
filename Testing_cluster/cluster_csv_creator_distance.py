@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
-
 # Testing Control
-CSV_NAME = 'test.csv'
+CSV_NAME = 'measz_vs_actz_3_00m.csv'
+# CSV_NAME = 'measz_vs_xoffs_0.01moffs_0_25m.csv'
+# CSV_NAME = 'acc_vs_zdist_0_25mstart.csv'
 MAX_ITERS = 10
+ACT_DIST = 0.25   # in meters
+XOFFS = 0   # in meters
+
 
 
 """
@@ -76,20 +80,26 @@ Tags_Dict = {}
 # tag_pitch:  Tags_Dict[tag_id][4]
 # tag_roll:   Tags_Dict[tag_id][5]
 
+# tag data
+TAGX = 0
+TAGY = 1
+TAGZ = 2
+TAGYAW = 3
+TAGPITCH = 4
+TAGROLL = 5
 
 
-
-
+# tag ids
 TAG0 = 0
 TAG1 = 1
 TAG2 = 2
 TAG3 = 3
 TAG4 = 4
-TAG5 = 5
-TAG6 = 6
-TAG7 = 7
-TAG8 = 8
-TAG9 = 9
+# TAG5 = 5
+# TAG6 = 6
+# TAG7 = 7
+# TAG8 = 8
+# TAG9 = 9
 
 
 
@@ -99,11 +109,7 @@ NUMBER_DETECTED = 0
 Last_Known_vars = []
 DATA_POINT = 1
 
-TAGX = 0
-TAGZ = 2
-TAGYAW = 3
-TAGPITCH = 4
-TAGROLL = 5
+
 
 
 
@@ -205,117 +211,45 @@ class ARTag():
 
     
 
-    def arBufferer(self, tags):
-        """Returns True and a tag list if at least one tag is identified
-           within a series of size TAGS_BUFFER SIZE
-        """
-        global Tags_Buffer
-
-        sizeOf = 0
-
-        if tags is not None:
-            sizeOf = len(tags)
-
-        if sizeOf > 0:
-            Tags_Buffer.append(tags)
-        else:
-            Tags_Buffer.append(None)
-        Tags_Buffer.pop(0)  # pop first item in list
-
-
-        buffered_tag_list = None
-        emptyFrames = 0
-
-        for i in range(0, TAGS_BUFFER_SIZE):
-            if Tags_Buffer[i] is None:
-                emptyFrames += 1
-            else:
-                buffered_tag_list = Tags_Buffer[i]  # will return last frame where there was a tag spotted
-        
-        # If a tag is seen at least once, set to true
-        # We get more false negatives than false positives, so this is the way we can 
-        # deal with it.
-        if TAGS_BUFFER_SIZE - emptyFrames > POS_TAG_IDEN:
-            tagDetected = True
-        else:
-            tagDetected = False
-
-        return tagDetected, buffered_tag_list
-
-
-
-
-    # def lastSeenTagUpdate(self, tag):
-    #     global Last_Seen_Tag
-    #     if tag is not None:
-    #         Last_Seen_Tag = tag
-
-
-    # def isolateATag(self, idTagToIsolate):
-    #     """Returns the (x,y,z) coordinates of a specific tag
-    #        If tag not in the list of visible tags, returns None
+    # def arBufferer(self, tags):
+    #     """Returns True and a tag list if at least one tag is identified
+    #        within a series of size TAGS_BUFFER SIZE
     #     """
-    #     #tagsList = list(Tags_Detected_List)
+    #     global Tags_Buffer
 
-    #     if Tag_Detected:
-    #         tags, sizeOf = self.convertTagPosition(Tags_Detected_List)
+    #     sizeOf = 0
 
-    #         if sizeOf > 0:  # ideally this case is checked before the function is called...
-    #             for i in range(0, sizeOf):
-    #                 tagID, tag_coords = tags[i]
+    #     if tags is not None:
+    #         sizeOf = len(tags)
 
-    #                 if tagID == idTagToIsolate:
-    #                     return tag_coords
-
-    #             # Case where wanted tag is not in the list of visible tags
-    #             return None
-    #         else:
-    #             # Odd case where Tag_Detected is true but that data list is empty
-    #             rospy.loginfo("Error, AR tags list is empty")
-    #             return None
+    #     if sizeOf > 0:
+    #         Tags_Buffer.append(tags)
     #     else:
-    #         rospy.loginfo("Error, no AR tags in sight. Can't use this function.")
-    #         return None
+    #         Tags_Buffer.append(None)
+    #     Tags_Buffer.pop(0)  # pop first item in list
 
 
+    #     buffered_tag_list = None
+    #     emptyFrames = 0
 
-    # def fsm(self):
-    #     global STATE
-        
-    #     # Sense before entering finite state machine
-    #     if Tags_Detected_List is not None:
-    #         tagsList = list(Tags_Detected_List)
-    #     else: 
-    #         tagsList = None
-    #     tagDetected = Tag_Detected
-    #     # if not OBSTACLE_DETECTED:
-
-    #     move_recommend = Twist()
-    #     move_recommend.linear.x = 0
-    #     move_recommend.angular.z = 0
-
-    #     if tagDetected:
-    #         rospy.loginfo("move_recommend.angular.z")
-    #         if tagsList is not None:
-    #             tags, tags_list_size = self.convertTagPosition(tagsList)
+    #     for i in range(0, TAGS_BUFFER_SIZE):
+    #         if Tags_Buffer[i] is None:
+    #             emptyFrames += 1
     #         else:
-    #             tags = Last_Seen_Tag
+    #             buffered_tag_list = Tags_Buffer[i]  # will return last frame where there was a tag spotted
+        
+    #     # If a tag is seen at least once, set to true
+    #     # We get more false negatives than false positives, so this is the way we can 
+    #     # deal with it.
+    #     if TAGS_BUFFER_SIZE - emptyFrames > POS_TAG_IDEN:
+    #         tagDetected = True
+    #     else:
+    #         tagDetected = False
 
-    #         # rospy.loginfo("tags[0]")
-    #         # rospy.loginfo(tags[0])
+    #     return tagDetected, buffered_tag_list
 
-    #         # rospy.loginfo("approachATag")
-    #         move_recommend = self.approachATag(tags[0])
-    #         # rospy.loginfo("Done with approachATag")
 
-    
-    #     rospy.loginfo("Last seen tag")
-    #     rospy.loginfo(Last_Seen_Tag)
-    #     # rospy.loginfo("move_recommend.angular.z")
-    #     # rospy.loginfo(move_recommend.angular.z)
-    #     self.wheels.publish(move_recommend)
-    #     self.r.sleep()
-    #     # pass
+
 
     def oriented_properly(self, single_est):
         """Returns a boolean which states whether the orientation is proper.
@@ -361,58 +295,8 @@ class ARTag():
 
         num_of_tags = len(Tags_Dict)
 
-        mean_x = 0.0
-        mean_y = 0.0
-        mean_z = 0.0
-        mean_yaw = 0.0
-        mean_pitch = 0.0
-        mean_roll = 0.0
-
-        ## TODO: get the means
-
-        
-        m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
-        m_measurements = [ round(elem, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
-
-        return {'center': m_measurements}
-
-
-    # def fsm(self):
-    #     # rospy.loginfo("Running fsm function\n")
-
-    #     if Tag_Detected:
-
-    #         single_estimate = copy.deepcopy(Tags_Dict)
-
-    #         if Multiple_Tags:
-    #             # If multiple tags are detected, get the means
-    #             single_estimate = self.mean_measurements()
-    #             # other wise, single_estimate dict has only one key value pair
-
-    #         # Check if orientation is proper
-    #         if self.oriented_properly(single_estimate):
-    #             rospy.loginfo("Oriented properly!")
-    #         else:
-    #             rospy.loginfo("NOT oriented properly")
-
-    #         rospy.loginfo("single_estimate = ")
-    #         rospy.loginfo(single_estimate)
-
-
-    #     self.r.sleep()
-
-    def mean_vars(self):
-        """If multiple tags are detected, returns a dict with the mean measurements of positions
-           and orientations.
-
-           Returns a dict of format: {'center': [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]}
-
-        """
-        # all values in the list are from a valid detection. Thus, all should be counted
-        num_of_vars = len(Last_Known_vars)
-
         if num_of_vars == 1:
-            return Last_Known_vars
+            return Tags_Dict
 
         mean_x = 0.0
         mean_y = 0.0
@@ -421,22 +305,83 @@ class ARTag():
         mean_pitch = 0.0
         mean_roll = 0.0
 
-        # [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
-
-        for i in range(num_of_vars):
-            mean_x += Last_Known_vars[i][0]
-            mean_y += Last_Known_vars[i][1]
-            mean_z += Last_Known_vars[i][2]
-            mean_yaw += Last_Known_vars[i][3]
-            mean_pitch += Last_Known_vars[i][4]
-            mean_roll += Last_Known_vars[i][5]
+        # get the means
+        for tag_id in Tags_Dict.keys():
+            mean_x += Tags_Dict[tag_id][TAGX]
+            mean_y += Tags_Dict[tag_id][TAGY]
+            mean_z += Tags_Dict[tag_id][TAGZ]
+            mean_yaw += Tags_Dict[tag_id][TAGYAW]
+            mean_pitch += Tags_Dict[tag_id][TAGPITCH]
+            mean_roll += Tags_Dict[tag_id][TAGROLL]
 
         
         m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
         m_measurements = [ round(float(elem)/num_of_vars, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
 
-        return m_measurements
-        # return []
+        return {'center': m_measurements}
+
+
+    def fsm(self):
+        # rospy.loginfo("Running fsm function\n")
+
+        if Tag_Detected:
+
+            # the idea is to have a single dict, whether a singl tag is seen or multiple tags
+            single_estimate = copy.deepcopy(Tags_Dict)
+
+            if Multiple_Tags:
+                # If multiple tags are detected, get the means
+                single_estimate = self.mean_measurements()
+                # other wise, single_estimate dict has only one key value pair
+
+            # Check if orientation is proper
+            if self.oriented_properly(single_estimate):
+                rospy.loginfo("Oriented properly!")
+            else:
+                rospy.loginfo("NOT oriented properly")
+
+            rospy.loginfo("single_estimate = ")
+            rospy.loginfo(single_estimate)
+
+
+        self.r.sleep()
+
+    # def mean_vars(self):
+    #     """If multiple tags are detected, returns a dict with the mean measurements of positions
+    #        and orientations.
+
+    #        Returns a dict of format: {'center': [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]}
+
+    #     """
+    #     # all values in the list are from a valid detection. Thus, all should be counted
+    #     num_of_vars = len(Last_Known_vars)
+
+    #     if num_of_vars == 1:
+    #         return Last_Known_vars
+
+    #     mean_x = 0.0
+    #     mean_y = 0.0
+    #     mean_z = 0.0
+    #     mean_yaw = 0.0
+    #     mean_pitch = 0.0
+    #     mean_roll = 0.0
+
+    #     # [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
+
+    #     for i in range(num_of_vars):
+    #         mean_x = mean_x + Last_Known_vars[i][0]
+    #         mean_y += Last_Known_vars[i][1]
+    #         mean_z += Last_Known_vars[i][2]
+    #         mean_yaw += Last_Known_vars[i][3]
+    #         mean_pitch += Last_Known_vars[i][4]
+    #         mean_roll += Last_Known_vars[i][5]
+
+        
+    #     m_measurements = [mean_x, mean_y, mean_z, mean_yaw, mean_pitch, mean_roll]
+    #     m_measurements = [ round(float(elem)/num_of_vars, 2) for elem in m_measurements ]  # round all elements to 2 decimal places
+
+    #     return m_measurements
+    #     # return []
 
 
 
@@ -479,55 +424,75 @@ class ARTag():
 
         with open(CSV_NAME, 'wb') as csvfile:
 
-            # fieldnames = ['data point, accuracy (percentage)', 'tag_x', 'tag_y', 'tag_z', 'tag_yaw', 'tag_pitch', 'tag_roll']
+            # fieldnames = ['data point', 'accuracy (percentage)', 'mean_x', 'mean_y', 'mean_z', 'mean_yaw', 'mean_pitch', 'mean_roll', multiple, numberoftags, tag0dtctd, tag1dtctd, tag2dtctd, tag3dtctd, tag4dtctd]
+            # for 'multiple' and tagXdtctd' categories: 1 means yes, 0 means no
 
             spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             
             rospy.loginfo("Begin writing to csv file...\n")
-            # writer.writeheader()
 
-            # if Tag_Detected:  # we care about starting only when ready (aka tag has been detected at least once)
-               
-            # rospy.loginfo("Inside Tag_Detected...\n")
 
             while not rospy.is_shutdown():
 
                 # rospy.loginfo("Inside the while not...\n")
                 
                 # Testing, CSV stuff:
-                ITERATIONS += 1
+                # ITERATIONS += 1
+
+                multiple = 0  # boolean
+                numberoftags = 0  # int
+                tag0dtctd = 0   # boolean
+                tag1dtctd = 0   # boolean
+                tag2dtctd = 0   # boolean
+                tag3dtctd = 0   # boolean
+                tag4dtctd = 0   # boolean
+
+                # ['mean_x', 'mean_y', 'mean_z', 'mean_yaw', 'mean_pitch', 'mean_roll']
+                vars_round = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
                 # make sure we only iterate NUMBER_DETECTED if tag 0 is detected
-                if Tag_Detected and (Tags_Dict.keys()[0] == TAG0):
-                    NUMBER_DETECTED += 1
-                    
+                if Tag_Detected:
 
-                    vars_round = [Tags_Dict[0][0], Tags_Dict[0][1], Tags_Dict[0][2], Tags_Dict[0][3], Tags_Dict[0][4], Tags_Dict[0][5]]
-                    vars_round = [ round(elem, 2) for elem in vars_round ]
+                    # NUMBER_DETECTED += 1
 
-                    Last_Known_vars.append(vars_round)
+                    for tagid in Tags_Dict.keys():
+                        numberoftags += 1
+                        if tagid == TAG0:
+                            tag0dtctd = 1
+                        elif tagid == TAG1:
+                            tag1dtctd = 1
+                        elif tagid == TAG2:
+                            tag2dtctd = 1
+                        elif tagid == TAG3:
+                            tag3dtctd = 1
+                        elif tagid == TAG4:
+                            tag4dtctd = 1
 
-                # at MAX_ITERS number of iterations, calculate the detection percentage vs the independent variable
-                if ITERATIONS == MAX_ITERS:
-                    accuracy = (float(NUMBER_DETECTED) / ITERATIONS) * 100  # given as a percentage
-                    # independent_var = Last_Known_vars
-                    which_vars = Last_Known_vars
+                    # the idea is to have a single dict, whether a single tag is seen or multiple tags
+                    single_estimate = copy.deepcopy(Tags_Dict)
 
-                    if (len(Last_Known_vars)) == 1:
-                        which_vars = Last_Known_vars[0]
-                    
-                    # Only worry about the mean if doing one of the accuracy measurements, otherwise no
-                    if MAX_ITERS != 1 and (len(Last_Known_vars) > 1):
-                        which_vars = self.mean_vars()
+                    if Multiple_Tags:
+                        multiple = 1
 
-                    rospy.loginfo("Writing to CSV file...\n")
-                    spamwriter.writerow([DATA_POINT, accuracy] + which_vars)
+                        # If multiple tags are detected, get the means
+                        single_estimate = self.mean_measurements()
+                        # other wise, single_estimate dict has only one key value pair
+                            
+                    onek = single_estimate.keys()[0]
 
-                    rospy.loginfo("Datapoint = %s", str(DATA_POINT))
-                    DATA_POINT += 1
-                    ITERATIONS = 0
-                    NUMBER_DETECTED = 0
-                    Last_Known_vars = []
+                    vars_round = [single_estimate[onek][TAGX], single_estimate[onek][TAGY], single_estimate[onek][TAGZ], single_estimate[onek][TAGYAW], single_estimate[onek][TAGPITCH], single_estimate[onek][TAGROLL]]
+
+                # if no tags detected, will be all zeros (since none of the variables will have changed)
+                which_vars = [multiple, numberoftags, tag0dtctd, tag1dtctd, tag2dtctd, tag3dtctd, tag4dtctd]
+
+                rospy.loginfo("Writing to CSV file...\n")
+                spamwriter.writerow([DATA_POINT] + vars_round + which_vars)
+
+                rospy.loginfo("Datapoint = %s", str(DATA_POINT))
+                DATA_POINT += 1
+                # ITERATIONS = 0
+                # NUMBER_DETECTED = 0
+                # Last_Known_vars = []
                 
 
                 self.r.sleep()
