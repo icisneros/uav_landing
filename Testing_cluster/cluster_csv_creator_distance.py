@@ -294,7 +294,7 @@ class ARTag():
 
         num_of_tags = len(Tags_Dict)
 
-        if num_of_vars == 1:
+        if num_of_tags == 1:
             return Tags_Dict
 
         mean_x = 0.0
@@ -320,30 +320,30 @@ class ARTag():
         return {'center': m_measurements}
 
 
-    def fsm(self):
-        # rospy.loginfo("Running fsm function\n")
+    # def fsm(self):
+    #     # rospy.loginfo("Running fsm function\n")
 
-        if Tag_Detected:
+    #     if Tag_Detected:
 
-            # the idea is to have a single dict, whether a singl tag is seen or multiple tags
-            single_estimate = copy.deepcopy(Tags_Dict)
+    #         # the idea is to have a single dict, whether a singl tag is seen or multiple tags
+    #         single_estimate = copy.deepcopy(Tags_Dict)
 
-            if Multiple_Tags:
-                # If multiple tags are detected, get the means
-                single_estimate = self.mean_measurements()
-                # other wise, single_estimate dict has only one key value pair
+    #         if Multiple_Tags:
+    #             # If multiple tags are detected, get the means
+    #             single_estimate = self.mean_measurements()
+    #             # other wise, single_estimate dict has only one key value pair
 
-            # Check if orientation is proper
-            if self.oriented_properly(single_estimate):
-                rospy.loginfo("Oriented properly!")
-            else:
-                rospy.loginfo("NOT oriented properly")
+    #         # Check if orientation is proper
+    #         if self.oriented_properly(single_estimate):
+    #             rospy.loginfo("Oriented properly!")
+    #         else:
+    #             rospy.loginfo("NOT oriented properly")
 
-            rospy.loginfo("single_estimate = ")
-            rospy.loginfo(single_estimate)
+    #         rospy.loginfo("single_estimate = ")
+    #         rospy.loginfo(single_estimate)
 
 
-        self.r.sleep()
+    #     self.r.sleep()
 
     # def mean_vars(self):
     #     """If multiple tags are detected, returns a dict with the mean measurements of positions
